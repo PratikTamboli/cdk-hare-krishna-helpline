@@ -124,6 +124,7 @@ const mainFlow = new Connect.CfnContactFlow(stack, 'mainFlow', {
         careerQueue.attrQueueArn,
         sadhanaQueue.attrQueueArn,
         familyQueue.attrQueueArn,
+        hoursOfOperation.attrHoursOfOperationArn,
     ),
     instanceArn: connectInstanceArn,
 });
