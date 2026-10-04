@@ -8,6 +8,60 @@ export function generateMainFlowContent(
     return JSON.stringify({
         Version: "2019-10-30",
         StartAction: "updateLogging",
+        Metadata: {
+            entryPointPosition: {x: 20, y: 20},
+            ActionMetadata: {
+                updateLogging: {position: {x: 40, y: 40}},
+                setVoice: {position: {x: 280, y: 40}},
+                greeting: {position: {x: 520, y: 40}},
+                getThought: {
+                    position: {x: 760, y: 40},
+                    parameters: {LambdaFunctionARN: {useDynamic: true}},
+                    dynamicMetadata: {},
+                    useDynamic: true,
+                },
+                playThought: {position: {x: 1000, y: 40}},
+                menu: {
+                    position: {x: 1240, y: 40},
+                    parameters: {LexV2Bot: {AliasArn: {useDynamic: true}}},
+                    useDynamicLexBotArn: true,
+                    lexV2BotName: "",
+                    conditionMetadata: [
+                        {id: "career-cond", operator: {name: "Equals", value: "Equals", shortDisplay: "="}, value: "CareerGuidance"},
+                        {id: "sadhana-cond", operator: {name: "Equals", value: "Equals", shortDisplay: "="}, value: "SpiritualSadhana"},
+                        {id: "family-cond", operator: {name: "Equals", value: "Equals", shortDisplay: "="}, value: "FamilyGuidance"},
+                    ],
+                },
+                notUnderstood: {position: {x: 1240, y: 280}},
+                careerMessage: {position: {x: 1480, y: -200}},
+                setCareerQueue: {
+                    position: {x: 1720, y: -200},
+                    parameters: {QueueId: {useDynamic: true}},
+                    useDynamic: true,
+                },
+                sadhanaMessage: {position: {x: 1480, y: 40}},
+                setSadhanaQueue: {
+                    position: {x: 1720, y: 40},
+                    parameters: {QueueId: {useDynamic: true}},
+                    useDynamic: true,
+                },
+                familyMessage: {position: {x: 1480, y: 280}},
+                setFamilyQueue: {
+                    position: {x: 1720, y: 280},
+                    parameters: {QueueId: {useDynamic: true}},
+                    useDynamic: true,
+                },
+                transferToQueue: {position: {x: 1960, y: 40}},
+                queueFullMessage: {position: {x: 2200, y: -200}},
+                errorMessage: {position: {x: 2200, y: 280}},
+                disconnect: {position: {x: 2440, y: 40}},
+            },
+            name: "HelplineMainFlow",
+            description: "",
+            type: "contactFlow",
+            status: "published",
+            hash: {},
+        },
         Actions: [
             {
                 Identifier: "updateLogging",

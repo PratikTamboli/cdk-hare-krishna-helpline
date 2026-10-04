@@ -16,7 +16,7 @@ const THOUGHTS_BY_WEEKDAY: Record<string, string> = {
 
 export const handler: ConnectContactFlowHandler = async (_event: ConnectContactFlowEvent): Promise<ConnectContactFlowResult> => {
 
-    const day: string = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'long' });
+    const day: string = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata', weekday: 'long' });
 
     const thought: string = THOUGHTS_BY_WEEKDAY[day]
         ?? "Every moment is an opportunity to turn inward.";

@@ -1,6 +1,7 @@
 import * as CDK from 'aws-cdk-lib';
 import * as Lambda from 'aws-cdk-lib/aws-lambda';
 import * as Connect from 'aws-cdk-lib/aws-connect';
+import { IConstruct } from 'constructs';
 import {transformAndValidateSync} from "class-transformer-validator";
 
 import {Environment} from "./environment";
@@ -19,6 +20,11 @@ const stack = new CDK.Stack(app, stackNameKebab, {
         region: environment.REGION,
     }
 });
+
+// Applies to every taggable resource in the stack automatically.
+CDK.Tags.of(stack).add('Project', 'HareKrishnaHelpline');
+CDK.Tags.of(stack).add('ManagedBy', 'CDK');
+CDK.Tags.of(stack).add('Owner', 'PratikTamboli');
 
 // Reusing an existing Connect instance rather than provisioning a new one.
 const connectInstanceId = environment.CONNECT_INSTANCE_ID;
@@ -84,7 +90,7 @@ const hoursOfOperation = new Connect.CfnHoursOfOperation(stack, 'hoursOfOperatio
     })),
     instanceArn: connectInstanceArn,
     name: "HelplineHoursOfOperation",
-    timeZone: "America/New_York",
+    timeZone: "Asia/Kolkata",
 });
 
 const careerQueue = new Connect.CfnQueue(stack, 'careerQueue', {
@@ -162,5 +168,19 @@ new Connect.CfnUser(stack, 'counselor', {
         counselorSecurityProfile.attrSecurityProfileArn,
     ],
 });
+
+// cdk-amazon-connect-resources' shared ConnectCustomResourceLambda (backing
+// the Lex bot association and the Lambda function association) has no
+// memorySize set and defaults to 128MB, which gets OOM-killed
+// ("signal: killed"). Bump it directly since there's no prop on those
+// constructs to set it ourselves.
+class IncreaseCustomResourceLambdaMemory implements CDK.IAspect {
+    visit(node: IConstruct): void {
+        if (node instanceof Lambda.CfnFunction && node.node.path.includes('ConnectCustomResourceLambda')) {
+            node.addPropertyOverride('MemorySize', 512);
+        }
+    }
+}
+CDK.Aspects.of(stack).add(new IncreaseCustomResourceLambdaMemory());
 
 app.synth();
